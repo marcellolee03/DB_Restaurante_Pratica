@@ -1,6 +1,7 @@
 from tabelas import session, Pratos, Clientes, Pedidos, ItensDoPedido
 import numpy as np
 
+#Funções para refinamento do código das funções principais
 def tem_certeza_adicionar(adição):
     user_input = input("As informações acima estão corretas?(S/N) ").upper()
 
@@ -23,6 +24,13 @@ def tem_certeza_remover(remocao, tipo):
     if user_input == "S":
         session.delete(remocao)
         session.commit()
+
+
+def existe(objeto):
+    if objeto is None:
+        return False
+    else:
+        return True
 
 
 #C - Create
@@ -133,77 +141,94 @@ def update():
     match user_input.lower():
         case "prato":
             user_input = input("Qual prato deseja atualizar? ")
+
             prato = session.query(Pratos).filter_by(nome = user_input).first()
 
-            prato.nome = input("Digite o nome do prato: ").lower()
-            prato.descricao = input("Digite a descrição do prato: ")
+            if existe(prato):
 
-            try:
-                prato.preco = float(input("Digite o preço do prato: R$ "))
+                prato.nome = input("Digite o nome do prato: ").lower()
+                prato.descricao = input("Digite a descrição do prato: ")
 
-                print(f"Nome: {prato.nome}\nDescrição: {prato.descricao}\nPreço: R$ {prato.preco}")
-                tem_certeza_adicionar(prato)
+                try:
+                    prato.preco = float(input("Digite o preço do prato: R$ "))
 
-            except ValueError:
-                print("Preço inválido. Digite apenas números!")
-                exit()
-        
+                    print(f"Nome: {prato.nome}\nDescrição: {prato.descricao}\nPreço: R$ {prato.preco}")
+                    tem_certeza_adicionar(prato)
+
+                except ValueError:
+                    print("Preço inválido. Digite apenas números!")
+                    exit()
+            
+            else:
+                print("Prato não encontrado.")
+
 
         case "cliente":
             user_input = input("Qual cliente deseja atualizar? ")
+            
             cliente = session.query(Clientes).filter_by(nome = user_input).first()
 
-            cliente.nome = input("Digite o nome do cliente: ").lower()
-            cliente.email = input("Digite o email do cliente: ").lower()
+            if existe(cliente):
+                cliente.nome = input("Digite o nome do cliente: ").lower()
+                cliente.email = input("Digite o email do cliente: ").lower()
 
-            try:
-                cliente.telefone = int(input("Digite o telefone do cliente: "))
+                try:
+                    cliente.telefone = int(input("Digite o telefone do cliente: "))
 
-                print(f"Nome: {cliente.nome}\nEmail: {cliente.email}\nTelefone: {cliente.telefone}")
-                tem_certeza_adicionar(cliente)
+                    print(f"Nome: {cliente.nome}\nEmail: {cliente.email}\nTelefone: {cliente.telefone}")
+                    tem_certeza_adicionar(cliente)
+                    
                 
+                except ValueError:
+                    print("Número inválido. Digite apenas números!")
+                    exit()
             
-            except ValueError:
-                print("Número inválido. Digite apenas números!")
-                exit()
+            else:
+                print("Cliente não encontrado.")
         
 
         case "pedido":
             user_input = input("Qual é o ID do pedido que deseja atualizar? ")
             pedido = session.query(Pedidos).filter_by(id_pedido = user_input).first()
 
-            try:
-                pedido.data = int(input("Digite a data do pedido no formato (ddmmaaaa): "))
-                pedido.status = input("Digite o status do pedido: ").lower()
+            if existe(pedido):
+                try:
+                    pedido.data = int(input("Digite a data do pedido no formato (ddmmaaaa): "))
+                    pedido.status = input("Digite o status do pedido: ").lower()
 
-                print(f"Nome: {cliente.nome}\nData: {pedido.data_pedido}\nStatus: {pedido.status}")
-                tem_certeza_adicionar(pedido)
+                    print(f"Nome: {cliente.nome}\nData: {pedido.data_pedido}\nStatus: {pedido.status}")
+                    tem_certeza_adicionar(pedido)
 
-            except ValueError:
-                print("Data inválida. Digite apenas números!")
+                except ValueError:
+                    print("Data inválida. Digite apenas números!")
+            else:
+                print("Pedido não encontrado.")
         
         
         case "itens_pedido":
             user_input = input("Qual é o ID do pedido que deseja atualizar? ")
             itens_do_pedido = session.query(ItensDoPedido).filter_by(id_item_pedido = user_input).first()
 
-            try:
-                user_input1 = int(input("Digite o id do pedido: "))
-                user_input2 = input("Digite o prato: ").lower()
-                qtde = int(input("Digite a quantidade: "))
+            if existe(itens_do_pedido):
+                try:
+                    user_input1 = int(input("Digite o id do pedido: "))
+                    user_input2 = input("Digite o prato: ").lower()
+                    qtde = int(input("Digite a quantidade: "))
 
-                pedido = session.query(Pedidos).filter_by(id_pedido = user_input1).first()
-                prato = session.query(Pratos).filter_by(nome = user_input2).first()
+                    pedido = session.query(Pedidos).filter_by(id_pedido = user_input1).first()
+                    prato = session.query(Pratos).filter_by(nome = user_input2).first()
 
-                itens_do_pedido.id_pedido = pedido.id_pedido
-                itens_do_pedido.id_prato = prato.id_prato
-                itens_do_pedido.qtde = qtde
+                    itens_do_pedido.id_pedido = pedido.id_pedido
+                    itens_do_pedido.id_prato = prato.id_prato
+                    itens_do_pedido.qtde = qtde
 
-                print(f"ID do pedido: {itens_do_pedido.id_pedido}\nPrato: {prato.nome}\nQuantidade: {itens_do_pedido.quantidade}")
-                tem_certeza_adicionar(itens_do_pedido)
+                    print(f"ID do pedido: {itens_do_pedido.id_pedido}\nPrato: {prato.nome}\nQuantidade: {itens_do_pedido.quantidade}")
+                    tem_certeza_adicionar(itens_do_pedido)
 
-            except ValueError:
-                print("Dados inválidos. Utilize apenas números ao descrever ID e quantidade!")
+                except ValueError:
+                    print("Dados inválidos. Utilize apenas números ao descrever ID e quantidade!")
+            else:
+                print("ID não encontrado")
         
         case _:
             print("Operação Inválida. Tente novamente.")
