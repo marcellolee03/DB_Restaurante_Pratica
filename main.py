@@ -21,5 +21,5 @@ while ligado:
         case "off":
             ligado = False
         
-        case "_":
+        case _:
             print("Caso inválido. Tente novamente.")

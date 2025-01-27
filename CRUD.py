@@ -122,6 +122,9 @@ def read():
             valores_unicos, contagem = np.unique(lista, return_counts = True)
             print(f"ID dos pratos pedidos: {valores_unicos}")
             print(f"Quantidade de vezes que foram pedidos: {contagem}")
+        
+        case _:
+            print("Operação Inválida. Tente novamente.")
     
 
 #U - Update
@@ -201,6 +204,9 @@ def update():
 
             except ValueError:
                 print("Dados inválidos. Utilize apenas números ao descrever ID e quantidade!")
+        
+        case _:
+            print("Operação Inválida. Tente novamente.")
 
 
 
@@ -243,3 +249,6 @@ def delete():
             
             except ValueError:
                 print("ID inválido. Digite apenas números!")
+        
+        case _:
+            print("Operação Inválida. Tente novamente.")
